@@ -1,4 +1,5 @@
 """reset miss time tickets and remind"""
+import os
 import time
 import datetime
 from argparse import ArgumentParser
@@ -14,7 +15,11 @@ def __get_args_parser():
                             help='Input Configuration',
                             nargs='*',
                             type=str,
-                            default='./jw/settings.cfg'
+                            default=os.path.abspath(
+                                os.path.dirname(
+                                    os.path.dirname(__file__)
+                                    )
+                                ) + '/settings.cfg'
                             )
 
     arg_parser.add_argument('-x', '--exec-once',
@@ -30,9 +35,11 @@ def __is_last_day_of_month(year, month, day):
     return last_days_month == day
 
 
-def __main():
+def main():
     last_activate_date_ = 19700101
     options = __get_args_parser().parse_args()
+
+    print('configuration path: {0}'.format(options.cfg))
 
     while True:
         year = datetime.datetime.now().year
@@ -66,4 +73,4 @@ def __main():
 
 
 if __name__ == '__main__':
-    __main()
+    main()
