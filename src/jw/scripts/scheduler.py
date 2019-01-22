@@ -1,18 +1,68 @@
+"""reset miss time tickets and remind"""
+import time
+import datetime
+from argparse import ArgumentParser
+from ConfigParser import RawConfigParser
 from tickets_scanner import TicketsScanner
+from calendar import monthrange
 
 
-#filter_condition = 'project in ("Consumer Products", "Industry Products", "Platform Products", XML, Salesforce, LOC) AND status in (Closed, Done, "PM Testing", Testing) AND type not in (Epic, subTaskIssueTypes()) AND (timespent is EMPTY OR timespent = 0) AND fixVersion is EMPTY AND updated >= 2017-11-01 ORDER BY Status DESC, updated DESC '
-filter_condition = 'project in ("Tom Test Project") AND status in (Closed, Done, "PM Testing", Testing) AND type not in (Epic, subTaskIssueTypes()) AND (timespent is EMPTY OR timespent = 0) AND fixVersion is EMPTY AND updated >= 2017-11-01 ORDER BY Status DESC, updated DESC '
+def __get_args_parser():
+    arg_parser = ArgumentParser(description=__doc__)
+
+    arg_parser.add_argument('cfg',
+                            help='Input Configuration',
+                            nargs='*',
+                            type=str,
+                            default='./jw/settings.cfg'
+                            )
+
+    arg_parser.add_argument('-x', '--exec-once',
+                            action='store_true',
+                            help='script will not run in scheduler mode')
+
+    return arg_parser
+
+
+def __is_last_day_of_month(year, month, day):
+    last_days_month = monthrange(year, month)[0]
+
+    return last_days_month == day
 
 
 def __main():
-    scanner = TicketsScanner(
-                'http://jira.juwai.com',
-                'barry.bao',
-                'wsjkdwyqwj@2019',
+    last_activate_date_ = 19700101
+    options = __get_args_parser().parse_args()
+
+    while True:
+        year = datetime.datetime.now().year
+        month = datetime.datetime.now().month
+        day = datetime.datetime.now().day
+        today = year * 10000 + month * 100 + day
+
+        if (__is_last_day_of_month(year, month, day) and
+                today > last_activate_date_) or options.exec_once:
+            config = RawConfigParser()
+            config.read(options.cfg)
+            jira_url = config.get('JIRA_MISS_TIME', 'jira_url')
+            login_name = config.get('JIRA_MISS_TIME', 'login_name')
+            login_password = config.get('JIRA_MISS_TIME', 'login_password')
+            filter_condition = config.get('JIRA_MISS_TIME', 'filter')
+
+            scanner = TicketsScanner(
+                jira_url,
+                login_name,
+                login_password,
                 filter_condition
-    )
-    scanner.scan()
+            )
+            scanner.scan()
+
+            last_activate_date_ = today
+
+        if options.exec_once:
+            break
+
+        time.sleep(60*2)
 
 
 if __name__ == '__main__':

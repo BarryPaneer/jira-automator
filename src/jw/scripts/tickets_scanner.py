@@ -10,10 +10,14 @@ class TicketsScanner:
         self.__options = {'server': server, 'validate': True}
         self.__login_account = (login_name, login_password)
         self.__filter_cond = filter_cond
+        log.info('[JIRA] mission activated...')
 
     def __login(self):
         try:
-            log.info('[JIRA] sign in, please wait...')
+            log.info('[JIRA] [{0}] sign in, please wait...'.format(
+                        self.__login_account[0]
+                )
+            )
             jira_session = JIRA(
                                 basic_auth=self.__login_account,
                                 options=self.__options
