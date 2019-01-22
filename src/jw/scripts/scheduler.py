@@ -25,7 +25,7 @@ def __get_args_parser():
 
 
 def __is_last_day_of_month(year, month, day):
-    last_days_month = monthrange(year, month)[0]
+    last_days_month = monthrange(year, month)[1]
 
     return last_days_month == day
 
