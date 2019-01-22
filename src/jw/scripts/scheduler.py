@@ -55,12 +55,16 @@ def main():
             login_name = config.get('JIRA_MISS_TIME', 'login_name')
             login_password = config.get('JIRA_MISS_TIME', 'login_password')
             filter_condition = config.get('JIRA_MISS_TIME', 'filter')
+            notice_for_assignee = config.get('JIRA_MISS_TIME', 'notice_for_assignee')
+            notice_for_reporter = config.get('JIRA_MISS_TIME', 'notice_for_reporter')
 
             scanner = TicketsScanner(
                 jira_url,
                 login_name,
                 login_password,
-                filter_condition
+                filter_condition,
+                notice_for_assignee,
+                notice_for_reporter
             )
             scanner.scan()
 

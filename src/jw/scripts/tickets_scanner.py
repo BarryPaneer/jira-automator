@@ -6,10 +6,12 @@ log = get_logger(__package__)
 
 
 class TicketsScanner:
-    def __init__(self, server, login_name, login_password, filter_cond):
+    def __init__(self, server, login_name, login_password, filter_cond, notice_for_assignee, notice_for_reporter):
         self.__options = {'server': server, 'validate': True}
         self.__login_account = (login_name, login_password)
         self.__filter_cond = filter_cond
+        self.__notice_for_assignee = notice_for_assignee
+        self.__notice_for_reporter = notice_for_reporter
         log.info('[JIRA] mission activated...')
 
     def __login(self):
@@ -55,7 +57,7 @@ class TicketsScanner:
         if issue_.fields.assignee:
             msg_to_assignee = '[~{0}] {1}'.format(
                     issue_.fields.assignee.name,
-                    'hey guy, log time, pls...'
+                    self.__notice_for_assignee
             )
 
             jira_session.add_comment(issue_, msg_to_assignee)
@@ -66,7 +68,7 @@ class TicketsScanner:
         else:
             msg_to_reporter = '[~{0}] {1}'.format(
                     issue_.fields.reporter.name,
-                    'hey guy, the issue is expired...'
+                    self.__notice_for_reporter
             )
 
             jira_session.add_comment(issue_, msg_to_reporter)
