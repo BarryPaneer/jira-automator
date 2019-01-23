@@ -62,4 +62,4 @@ notice_for_reporter = [SYSTEM NOTICE] The issue has not been assigned !
 
 ```
 
-you can find this configuration in folder (lib/python2.7//site-packages/jira_scheduler-0.0.1.dev0-py2.7.egg/jw/settings.cfg) 
+you can find this configuration in folder (python2.7/site-packages/jira_scheduler-0.0.1.dev0-py2.7.egg/jw/settings.cfg) 
