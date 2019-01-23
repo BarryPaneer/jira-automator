@@ -46,6 +46,16 @@ class TicketsScanner:
         except Exception as e:
             log.error('[EXCEPTION] scan() :: {0}'.format(str(e)))
 
+    def __choose_status_name(self, jira_session, issue_):
+            transitions_json = jira_session.transitions(issue_)
+
+            for transition in transitions_json:
+                status_name = transition["name"].lower()
+                if 'backlog' in status_name:
+                    return transition["name"]
+
+            return 'In Progress'
+
     def __reset_misstime_issue(self, jira_session, issue_):
         log.info('[JIRA] Issue\'s KEY[{0}] current status: "{1}"'.format(
                 issue_.key, issue_.fields.status.name
@@ -58,7 +68,8 @@ class TicketsScanner:
             return
 
         # setback
-        jira_session.transition_issue(issue_, transition='In Progress')
+        status_name = self.__choose_status_name(jira_session, issue_)
+        jira_session.transition_issue(issue_, transition=status_name)
 
         if issue_.fields.assignee:
             msg_to_assignee = '[~{0}] {1}'.format(
