@@ -43,3 +43,23 @@ $ ve rpc-start --help # more info
 ```bash
 $ ve scheduler-start src/jw/settings.cfg -x
 ```
+
+### Example of configuration
+```
+[JIRA_MISS_TIME]
+
+jira_url = http://jira.juwai.com
+
+login_name = IamCaesar
+
+login_password = MyPassword
+
+filter = project in ("Consumer Products", "Industry Products", "Platform Products", XML, Salesforce, LOC) AND status in (Closed, Done, "PM Testing", Testing) AND type not in (Epic, subTaskIssueTypes()) AND (timespent is EMPTY OR timespent = 0) AND fixVersion is EMPTY AND updated >= 2017-11-01 ORDER BY Status DESC, updated DESC
+
+notice_for_assignee = [SYSTEM NOTICE] Log time, please !
+
+notice_for_reporter = [SYSTEM NOTICE] The issue has not been assigned !
+
+```
+
+you can find this configuration in folder (lib/python2.7//site-packages/jira_scheduler-0.0.1.dev0-py2.7.egg/jw/settings.cfg) 
