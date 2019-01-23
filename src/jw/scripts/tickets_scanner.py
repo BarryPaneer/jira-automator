@@ -27,25 +27,28 @@ class TicketsScanner:
                                 )
             log.info('[JIRA] ok!')
         except Exception as e:
-            log.error('[EXCEPTION] {0}'.format(str(e)))
+            log.error('[EXCEPTION] __login():: {0}'.format(str(e)))
             raise
 
         return jira_session
 
     def scan(self):
-        jira_session = self.__login()
+        try:
+            jira_session = self.__login()
 
-        log.info('[JIRA] scanning miss time issue...')
-        misstime_issues = jira_session.search_issues(self.__filter_cond)
-        log.info('[JIRA] issue count: {0}'.format(len(misstime_issues)))
+            log.info('[JIRA] scanning miss time issue...')
+            misstime_issues = jira_session.search_issues(self.__filter_cond)
+            log.info('[JIRA] issue count: {0}'.format(len(misstime_issues)))
 
-        for issue_ in misstime_issues:
-            try:
-                self.__reset_misstime_issue(jira_session, issue_)
-            except Exception as e:
-                log.error('[EXCEPTION] {0}'.format(str(e)))
+            for issue_ in misstime_issues:
+                try:
+                    self.__reset_misstime_issue(jira_session, issue_)
+                except Exception as e:
+                    log.error('[EXCEPTION] {0}'.format(str(e)))
 
-        log.info('[JIRA] mission complete !')
+            log.info('[JIRA] mission complete !')
+        except Exception as e:
+            log.error('[EXCEPTION] scan() :: {0}'.format(str(e)))
 
     def __reset_misstime_issue(self, jira_session, issue_):
         log.info('[JIRA] Issue\'s KEY[{0}] current status: "{1}"'.format(
