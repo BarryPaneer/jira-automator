@@ -56,9 +56,9 @@ login_password = MyPassword
 
 filter = project in ("Consumer Products", "Industry Products", "Platform Products", XML, Salesforce, LOC) AND status in (Closed, Done, "PM Testing", Testing) AND type not in (Epic, subTaskIssueTypes()) AND (timespent is EMPTY OR timespent = 0) AND fixVersion is EMPTY AND updated >= 2017-11-01 ORDER BY Status DESC, updated DESC
 
-notice_for_assignee = [SYSTEM NOTICE] Log time, please !
+notice_for_assignee = [SYSTEM NOTICE]Ticket must have time logged before closing.
 
-notice_for_reporter = [SYSTEM NOTICE] The issue has not been assigned !
+notice_for_reporter = [SYSTEM NOTICE] Ticket needs to be assigned and must have time logged before closing.
 
 ```
 
