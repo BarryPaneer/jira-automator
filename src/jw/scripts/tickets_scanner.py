@@ -16,19 +16,15 @@ class TicketsScanner:
         log.info('[JIRA] mission activated...')
 
     def __login(self):
-        try:
-            log.info('[JIRA] [{0}] sign in, please wait...'.format(
-                        self.__login_account[0]
-                )
+        log.info('[JIRA] [{0}] sign in, please wait...'.format(
+                    self.__login_account[0]
             )
-            jira_session = JIRA(
-                                basic_auth=self.__login_account,
-                                options=self.__options
-                                )
-            log.info('[JIRA] ok!')
-        except Exception as e:
-            log.error('[EXCEPTION] __login():: {0}'.format(str(e)))
-            raise
+        )
+        jira_session = JIRA(
+                            basic_auth=self.__login_account,
+                            options=self.__options
+                            )
+        log.info('[JIRA] ok!')
 
         return jira_session
 
@@ -56,6 +52,12 @@ class TicketsScanner:
                 )
         )
 
+        # exit when timespent has a value
+        if issue_.fields.timespent is not None:
+            log.warn('[JIRA] issue.timespend is not null, skip...')
+            return
+
+        # setback
         jira_session.transition_issue(issue_, transition='In Progress')
 
         if issue_.fields.assignee:
