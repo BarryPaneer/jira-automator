@@ -49,14 +49,20 @@ def main():
 
         if (__is_last_day_of_month(year, month, day) and
                 today > last_activate_date_) or options.exec_once:
+
+            if datetime.datetime.now().hour != 9 and not options.exec_once:
+                break
+
             config = RawConfigParser()
             config.read(options.cfg)
             jira_url = config.get('JIRA_MISS_TIME', 'jira_url')
             login_name = config.get('JIRA_MISS_TIME', 'login_name')
             login_password = config.get('JIRA_MISS_TIME', 'login_password')
             filter_condition = config.get('JIRA_MISS_TIME', 'filter')
-            notice_for_assignee = config.get('JIRA_MISS_TIME', 'notice_for_assignee')
-            notice_for_reporter = config.get('JIRA_MISS_TIME', 'notice_for_reporter')
+            notice_for_assignee = config.get('JIRA_MISS_TIME',
+                                             'notice_for_assignee')
+            notice_for_reporter = config.get('JIRA_MISS_TIME',
+                                             'notice_for_reporter')
 
             scanner = TicketsScanner(
                 jira_url,

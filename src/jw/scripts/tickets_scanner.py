@@ -6,7 +6,8 @@ log = get_logger(__package__)
 
 
 class TicketsScanner:
-    def __init__(self, server, login_name, login_password, filter_cond, notice_for_assignee, notice_for_reporter):
+    def __init__(self, server, login_name, login_password,
+                 filter_cond, notice_for_assignee, notice_for_reporter):
         self.__options = {'server': server, 'validate': True}
         self.__login_account = (login_name, login_password)
         self.__filter_cond = filter_cond
