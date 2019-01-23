@@ -35,7 +35,7 @@
 ### Start services
 
 ```bash
-$ ve scheduler-start ./your/other/folder/settings.cfg
+$ ve scheduler-start your/other/folder/settings.cfg
 $ ve rpc-start --help # more info
 ```
 
