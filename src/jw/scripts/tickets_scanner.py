@@ -53,8 +53,8 @@ class TicketsScanner:
         )
 
         # exit when timespent has a value
-        if issue_.fields.timespent is not None:
-            log.warn('[JIRA] issue.timespend is not null, skip...')
+        if issue_.fields.timespent:
+            log.warn('[JIRA] issue.timespend is not null/zero, skip...')
             return
 
         # setback
