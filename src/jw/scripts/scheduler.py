@@ -31,7 +31,7 @@ def __get_args_parser():
 
 def __is_last_day_of_month(year, month, day):
     last_days_month = monthrange(year, month)[1]
-    return True
+
     return last_days_month == day
 
 
@@ -42,13 +42,13 @@ def main():
     print('configuration path: {0}'.format(options.cfg))
 
     while True:
+        if not options.exec_once:
+            time.sleep(30)
+
         year = datetime.datetime.now().year
         month = datetime.datetime.now().month
         day = datetime.datetime.now().day
         today = year * 10000 + month * 100 + day
-
-        if not options.exec_once:
-            time.sleep(30)
 
         if (__is_last_day_of_month(year, month, day) and
                 today > last_activate_date_) or options.exec_once:
