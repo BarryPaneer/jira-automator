@@ -109,7 +109,7 @@ class TicketsScanner:
             )
 
             jira_session.add_comment(issue_, msg_to_assignee)
-            log.info('[OK] notify assignee[{0}] ->"In Progress"'.format(
+            log.info('[OK] notify assignee[{0}]'.format(
                     issue_.fields.assignee.name
                     )
             )
@@ -120,7 +120,7 @@ class TicketsScanner:
             )
 
             jira_session.add_comment(issue_, msg_to_reporter)
-            log.info('[OK] notify reporter[{0}] ->"In Progress"'.format(
+            log.info('[OK] notify reporter[{0}]'.format(
                     issue_.fields.reporter.name
                     )
             )
