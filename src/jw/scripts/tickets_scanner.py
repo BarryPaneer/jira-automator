@@ -5,6 +5,35 @@ from ..jw_log import get_logger
 log = get_logger(__package__)
 
 
+class Transition2Backlog:
+    def __init__(self, jira_session, issue_):
+        self.__jira_session = jira_session
+        self.__issue_ = issue_
+
+    def __call__(self):
+        action_table = ['reopen issue', 'start progress',
+                        'stop progress', 'fail testing', 'revert']
+
+        self.__transition_in_workflow(action_table)
+
+    def __transition_in_workflow(self, action_table):
+        transitions_json = self.__jira_session.transitions(self.__issue_)
+
+        for transition in transitions_json:
+            next_step_name = transition['name'].lower()
+
+            for action in action_table:
+
+                if action in next_step_name:
+                    self.__jira_session.transition_issue(self.__issue_,
+                                                         transition=action)
+                    action_table.remove(action)
+                    log.info('[JIRA] Transition :{0} --> {1}'.format(
+                                            self.__issue_.key, action))
+                    self.__transition_in_workflow(action_table)
+                    break
+
+
 class TicketsScanner:
     def __init__(self, server, login_name, login_password,
                  filter_cond, notice_for_assignee, notice_for_reporter):
@@ -59,16 +88,6 @@ class TicketsScanner:
 
         return False
 
-    def __choose_status_name(self, jira_session, issue_):
-            transitions_json = jira_session.transitions(issue_)
-
-            for transition in transitions_json:
-                status_name = transition["name"].lower()
-                if 'backlog' in status_name:
-                    return transition["name"]
-
-            return 'In Progress'
-
     def __reset_misstime_issue(self, jira_session, issue_):
         log.info('[JIRA] Issue\'s KEY[{0}] current status: "{1}"'.format(
                 issue_.key, issue_.fields.status.name
@@ -81,8 +100,7 @@ class TicketsScanner:
             return
 
         # setback
-        status_name = self.__choose_status_name(jira_session, issue_)
-        jira_session.transition_issue(issue_, transition=status_name)
+        Transition2Backlog(jira_session, issue_)()
 
         if issue_.fields.assignee:
             msg_to_assignee = '[~{0}] {1}'.format(
