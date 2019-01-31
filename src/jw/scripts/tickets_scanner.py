@@ -38,6 +38,7 @@ class TicketsScanner:
             log.info('[JIRA] issue count: {0}'.format(len(misstime_issues)))
 
             if 0 == len(misstime_issues):
+                log.info('[JIRA] skip and check next issue...')
                 return True
 
             for issue_ in misstime_issues:
@@ -51,6 +52,8 @@ class TicketsScanner:
 
             if reset_count > 0:
                 return True
+            else:
+                log.warn('[JIRA] [WARNING] retry later...')
 
         except Exception as e:
             log.error('[EXCEPTION] scan() :: {0}'.format(str(e)))
