@@ -72,9 +72,9 @@ def main():
                 notice_for_assignee,
                 notice_for_reporter
             )
-            scanner.scan()
 
-            last_activate_date_ = today
+            if scanner.scan():
+                last_activate_date_ = today
 
         if options.exec_once:
             break

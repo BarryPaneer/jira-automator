@@ -30,21 +30,32 @@ class TicketsScanner:
 
     def scan(self):
         try:
+            reset_count = 0
             jira_session = self.__login()
 
             log.info('[JIRA] scanning miss time issue...')
             misstime_issues = jira_session.search_issues(self.__filter_cond)
             log.info('[JIRA] issue count: {0}'.format(len(misstime_issues)))
 
+            if 0 == len(misstime_issues):
+                return True
+
             for issue_ in misstime_issues:
                 try:
                     self.__reset_misstime_issue(jira_session, issue_)
+                    reset_count += 1
                 except Exception as e:
                     log.error('[EXCEPTION] {0}'.format(str(e)))
 
             log.info('[JIRA] mission complete !')
+
+            if reset_count > 0:
+                return True
+
         except Exception as e:
             log.error('[EXCEPTION] scan() :: {0}'.format(str(e)))
+
+        return False
 
     def __choose_status_name(self, jira_session, issue_):
             transitions_json = jira_session.transitions(issue_)
