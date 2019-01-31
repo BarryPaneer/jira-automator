@@ -73,6 +73,7 @@ def main():
                 notice_for_reporter
             )
 
+            # if get a failure then retry.
             if scanner.scan():
                 last_activate_date_ = today
 
