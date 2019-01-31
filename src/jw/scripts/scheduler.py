@@ -31,7 +31,7 @@ def __get_args_parser():
 
 def __is_last_day_of_month(year, month, day):
     last_days_month = monthrange(year, month)[1]
-
+    return True
     return last_days_month == day
 
 
@@ -47,11 +47,14 @@ def main():
         day = datetime.datetime.now().day
         today = year * 10000 + month * 100 + day
 
+        if not options.exec_once:
+            time.sleep(30)
+
         if (__is_last_day_of_month(year, month, day) and
                 today > last_activate_date_) or options.exec_once:
 
             if datetime.datetime.now().hour != 9 and not options.exec_once:
-                break
+                continue  # [ServiceMode] not in working time
 
             config = RawConfigParser()
             config.read(options.cfg)
@@ -79,8 +82,6 @@ def main():
 
         if options.exec_once:
             break
-
-        time.sleep(60*2)
 
 
 if __name__ == '__main__':
