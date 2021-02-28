@@ -38,7 +38,6 @@ class TicketsScanner:
             log.info('[JIRA] issue count: {0}'.format(len(misstime_issues)))
 
             if 0 == len(misstime_issues):
-                log.info('[JIRA] skip and check next issue...')
                 return True
 
             for issue_ in misstime_issues:
